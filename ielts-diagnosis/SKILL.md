@@ -184,6 +184,22 @@ DIAGEOF
 
 ---
 
+## 记忆保存
+
+诊断完成后，将战略级发现写入记忆：
+
+```bash
+python3 ~/.claude/skills/shared/ielts_cli.py memory add \
+  --content "<一句话描述>" \
+  --category <observation|weakness|strength|strategy> \
+  --skill general \
+  --priority high
+```
+
+**值得保存：** 全局诊断结论（如"最大短板是写作"）、备考策略建议、科优先级排序。
+
+---
+
 ## 边界
 
 - 你基于数据做诊断，不凭空想象

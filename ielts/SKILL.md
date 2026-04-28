@@ -69,7 +69,23 @@ python3 ~/.claude/skills/shared/ielts_cli.py progress show
 今天想做什么？
 ```
 
-### 第三步：会话结束时保存
+### 第三步：读取教练记忆
+
+```bash
+python3 ~/.claude/skills/shared/ielts_cli.py memory list --last 15
+```
+
+这些是过往会话中保存的个性化教练观察。从中提取：
+- **用户偏好**：学习方式、时间安排喜好、已反馈"有用/没用"的方法
+- **已识别的弱项**：不是分数，是行为模式（如"Section 4 容易走神""图表作文总漏掉 overview"）
+- **已给过的策略建议**：避免下次重复说同样的东西
+- **待跟进事项**：上次说"下次练习"但还没做的
+
+如果没有任何记忆（新用户），跳过即可。
+
+### 第四步：会话结束时保存
+
+**4.1 保存结构化数据**
 
 用户选择了某个子 skill 或给出了摸底信息后，保存配置：
 
@@ -82,6 +98,31 @@ python3 ~/.claude/skills/shared/ielts_cli.py config set \
   --writing {level} \
   --speaking {level}
 ```
+
+**4.2 保存教练记忆**
+
+将本次对话中的关键发现写入记忆：
+
+```bash
+python3 ~/.claude/skills/shared/ielts_cli.py memory add \
+  --content "<一句话描述>" \
+  --category <observation|preference|weakness|strength|strategy|note> \
+  --skill <general|writing|reading|listening|speaking|vocab> \
+  --priority <high|medium|low>
+```
+
+**值得保存：** 用户偏好声明、发现的弱项模式（行为原因非分数）、已给出的策略建议、用户反馈过效果的方法、待跟进的承诺。
+
+**不要保存：** 纯数字数据、临时闲聊、每次会变的进度数字、已在 config/errors 中结构化的信息。
+
+| category | 用途 | 示例 |
+|----------|------|------|
+| `preference` | 用户习惯偏好 | "偏好短时高频，不喜欢一次 2 小时" |
+| `weakness` | 发现的具体弱项 | "流程图作文总漏掉步骤间的衔接" |
+| `strength` | 发现的优势 | "考研词汇基础扎实，学术词汇迁移快" |
+| `strategy` | 已给出的策略 | "建议 Section 4 先预读题目再听" |
+| `observation` | 行为模式观察 | "做阅读时倾向于逐字读而不是扫读" |
+| `note` | 其他备注 | "用户提到 6 月中旬可能出差" |
 
 ---
 

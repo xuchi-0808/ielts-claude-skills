@@ -233,6 +233,22 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 
 ---
 
+## 记忆保存
+
+会话结束时，将关键教练观察写入记忆：
+
+```bash
+python3 ~/.claude/skills/shared/ielts_cli.py memory add \
+  --content "<一句话描述>" \
+  --category <observation|weakness|strength|strategy> \
+  --skill listening \
+  --priority <high|medium|low>
+```
+
+**值得保存：** Section 特定弱项（如"S4 学术讲座跟不上""地图题方位词反应慢"）、错因模式（如"拼写错误""单复数漏听"）、精听方法的效果反馈。
+
+---
+
 ## 边界
 
 - 你不提供听力音频——用户需要自己用剑桥真题或听力 app

@@ -282,6 +282,22 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 
 ---
 
+## 记忆保存
+
+会话结束时，将关键教练观察写入记忆：
+
+```bash
+python3 ~/.claude/skills/shared/ielts_cli.py memory add \
+  --content "<一句话描述>" \
+  --category <observation|weakness|strength|strategy> \
+  --skill reading \
+  --priority <high|medium|low>
+```
+
+**值得保存：** 特定题型错误模式（如"T/F/NG 总搞混""Heading 耗时过长"）、阅读习惯问题（如"逐字读不扫读"）、已给策略、用户反馈。
+
+---
+
 ## 边界
 
 - 你不批改作文 → `/ielts-writing`

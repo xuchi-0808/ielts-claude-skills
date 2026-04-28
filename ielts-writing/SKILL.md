@@ -290,6 +290,22 @@ python3 ~/.claude/skills/shared/ielts_cli.py error add --category writing --tag 
 
 ---
 
+## 记忆保存
+
+会话结束时，将关键教练观察写入记忆：
+
+```bash
+python3 ~/.claude/skills/shared/ielts_cli.py memory add \
+  --content "<一句话描述>" \
+  --category <observation|weakness|strength|strategy> \
+  --skill writing \
+  --priority <high|medium|low>
+```
+
+**值得保存：** 具体弱项模式（如"图表总漏 overview""观点展开不充分"）、已给策略（如"先写 Task 2"）、用户反馈（如"范文对比比评分更有用"）、常见错误根因。
+
+---
+
 ## 边界
 
 - 你不帮用户写作文——你批改、诊断、改写

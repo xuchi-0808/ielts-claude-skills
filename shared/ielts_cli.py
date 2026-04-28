@@ -36,6 +36,7 @@ WRITING_DIR = IELTS_DIR / "writing"
 READING_DIR = IELTS_DIR / "reading"
 LISTENING_DIR = IELTS_DIR / "listening"
 SPEAKING_DIR = IELTS_DIR / "speaking"
+MEMORY_FILE = IELTS_DIR / "memories.json"
 DASHBOARD_FILE = IELTS_DIR / "dashboard.html"
 DASHBOARD_TEMPLATE = Path(__file__).resolve().parent.parent / "dashboard" / "template.html"
 
@@ -130,6 +131,17 @@ class VocabWord:
     last_reviewed: str = ""
 
 
+@dataclass
+class CoachMemory:
+    id: str
+    date: str
+    category: str  # observation, preference, weakness, strength, strategy, note
+    skill: str     # general, writing, reading, listening, speaking, vocab
+    content: str
+    source: str = ""
+    priority: str = "medium"
+
+
 # ── Utilities ──────────────────────────────────────────────────────
 
 def _round_ielts(score: float) -> float:
@@ -194,6 +206,7 @@ def cmd_init():
         (SYNONYMS_FILE, []),
         (PROGRESS_FILE, {"writing_scores": [], "reading_scores": [], "listening_scores": [], "speaking_scores": []}),
         (VOCAB_FILE, []),
+        (MEMORY_FILE, []),
     ]:
         if not f.exists():
             _save_json(f, default)
@@ -767,6 +780,63 @@ def cmd_status(args):
     return 0
 
 
+# ── Memory Commands ────────────────────────────────────────────────
+
+def cmd_memory_add(args):
+    """Save a coaching observation to persistent memory."""
+    memories = _load_json(MEMORY_FILE, [])
+    import hashlib
+    memory_id = hashlib.md5(f"{datetime.now().isoformat()}{args.content}".encode()).hexdigest()[:8]
+
+    entry = CoachMemory(
+        id=memory_id,
+        date=_today(),
+        category=args.category or "note",
+        skill=args.skill or "general",
+        content=args.content,
+        source=args.source or "manual",
+        priority=args.priority or "medium",
+    )
+    memories.append(asdict(entry))
+    _save_json(MEMORY_FILE, memories)
+    print(json.dumps({"status": "ok", "memory": asdict(entry)}, ensure_ascii=False))
+    return 0
+
+
+def cmd_memory_list(args):
+    """List coaching memories with optional filters."""
+    memories = _load_json(MEMORY_FILE, [])
+    if args.category:
+        memories = [m for m in memories if m["category"] == args.category]
+    if args.skill:
+        memories = [m for m in memories if m["skill"] == args.skill]
+    memories.sort(key=lambda m: m["date"], reverse=True)
+    if args.last and args.last > 0:
+        memories = memories[:args.last]
+    print(json.dumps(memories, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_memory_search(args):
+    """Search coaching memories by keyword."""
+    memories = _load_json(MEMORY_FILE, [])
+    query = args.query.lower()
+    results = [m for m in memories if query in m["content"].lower()]
+    results.sort(key=lambda m: m["date"], reverse=True)
+    print(json.dumps(results, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_memory_delete(args):
+    """Delete a coaching memory by ID."""
+    memories = _load_json(MEMORY_FILE, [])
+    before = len(memories)
+    memories = [m for m in memories if m["id"] != args.id]
+    _save_json(MEMORY_FILE, memories)
+    print(json.dumps({"status": "ok", "message": f"Deleted {before - len(memories)} memory"}))
+    return 0
+
+
 # ── CLI Main ───────────────────────────────────────────────────────
 
 def main():
@@ -891,6 +961,24 @@ def main():
     p_restore = sub.add_parser("restore", help="Restore from backup")
     p_restore.add_argument("--file", required=True)
 
+    # memory
+    p_mem = sub.add_parser("memory", help="Coaching memory management")
+    p_mem_sub = p_mem.add_subparsers(dest="memory_action")
+    p_ma = p_mem_sub.add_parser("add", help="Save a coaching observation")
+    p_ma.add_argument("--content", required=True)
+    p_ma.add_argument("--category", default="note", choices=["observation", "preference", "weakness", "strength", "strategy", "note"])
+    p_ma.add_argument("--skill", default="general", choices=["general", "writing", "reading", "listening", "speaking", "vocab"])
+    p_ma.add_argument("--source", default="manual")
+    p_ma.add_argument("--priority", default="medium", choices=["high", "medium", "low"])
+    p_ml = p_mem_sub.add_parser("list", help="List coaching memories")
+    p_ml.add_argument("--category", choices=["observation", "preference", "weakness", "strength", "strategy", "note"])
+    p_ml.add_argument("--skill", choices=["general", "writing", "reading", "listening", "speaking", "vocab"])
+    p_ml.add_argument("--last", type=int, default=0)
+    p_ms = p_mem_sub.add_parser("search", help="Search coaching memories")
+    p_ms.add_argument("--query", required=True)
+    p_md = p_mem_sub.add_parser("delete", help="Delete a coaching memory")
+    p_md.add_argument("--id", required=True)
+
     # status
     sub.add_parser("status", help="Output status bar summary")
 
@@ -916,6 +1004,7 @@ def main():
         "backup": lambda: cmd_backup(args),
         "restore": lambda: cmd_restore(args),
         "status": lambda: cmd_status(args),
+        "memory": lambda: _handle_memory(args),
     }
 
     handler = handlers.get(args.command)
@@ -1013,6 +1102,20 @@ def _handle_vocab(args):
         return cmd_vocab_list(args)
     else:
         print("Usage: ielts_cli.py vocab [add|review|update|list]")
+        return 1
+
+
+def _handle_memory(args):
+    if args.memory_action == "add":
+        return cmd_memory_add(args)
+    elif args.memory_action == "list":
+        return cmd_memory_list(args)
+    elif args.memory_action == "search":
+        return cmd_memory_search(args)
+    elif args.memory_action == "delete":
+        return cmd_memory_delete(args)
+    else:
+        print("Usage: ielts_cli.py memory [add|list|search|delete]")
         return 1
 
 

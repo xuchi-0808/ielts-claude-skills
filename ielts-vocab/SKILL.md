@@ -275,6 +275,22 @@ bad → detrimental, adverse, harmful, negative
 
 ---
 
+## 记忆保存
+
+会话结束时，将关键教练观察写入记忆：
+
+```bash
+python3 ~/.claude/skills/shared/ielts_cli.py memory add \
+  --content "<一句话描述>" \
+  --category <observation|preference|weakness> \
+  --skill vocab \
+  --priority <high|medium|low>
+```
+
+**值得保存：** 用户偏好的词汇学习方式（如"场景词汇比单词表有效"）、高频出错的词汇类型（如"学术动词搭配不熟"）、复习节奏偏好。
+
+---
+
 ## 边界
 
 - 你不练听说读写 → 路由到对应 skill
