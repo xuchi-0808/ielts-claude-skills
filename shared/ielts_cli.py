@@ -214,8 +214,9 @@ def cmd_init():
 def cmd_config_get():
     """Read and output config.json."""
     config = _load_json(CONFIG_FILE, asdict(Config()))
-    config["days_until_exam"] = Config(**config).days_until_exam()
-    config["overall_band"] = Config(**config).overall_band()
+    cfg = Config(**{k: v for k, v in config.items() if k in Config.__dataclass_fields__})
+    config["days_until_exam"] = cfg.days_until_exam()
+    config["overall_band"] = cfg.overall_band()
     print(json.dumps(config, ensure_ascii=False, indent=2))
     return 0
 
