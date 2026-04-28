@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Learning Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --green: #4ade80;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --purple: #c084fc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 24px;
+  }
+  .dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-right {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-align: center;
+  }
+  .stat-pill .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-pill .label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .countdown .value { color: var(--yellow); }
+  .grid { display: grid; gap: 24px; }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .card h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 300px;
+  }
+  .chart-wrap.large { height: 400px; }
+  .chart-wrap canvas { width: 100% !important; height: 100% !important; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+  tr:hover { background: rgba(255,255,255,0.03); }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state p { margin-top: 8px; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 12px; }
+  .tag-writing { background: rgba(56,189,248,0.2); color: var(--accent); }
+  .tag-reading { background: rgba(74,222,128,0.2); color: var(--green); }
+  .tag-listening { background: rgba(251,191,36,0.2); color: var(--yellow); }
+  .tag-speaking { background: rgba(192,132,252,0.2); color: var(--purple); }
+
+  .synonym-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 12px; }
+    header { flex-direction: column; align-items: flex-start; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  #loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div id="loading">Loading dashboard data...</div>
+
+<div id="app" style="display:none;">
+  <div class="dashboard">
+    <header>
+      <h1>IELTS Learning Dashboard</h1>
+      <div class="header-right">
+        <div class="stat-pill countdown">
+          <div class="value" id="countdown">--</div>
+          <div class="label">Days Until Exam</div>
+        </div>
+        <div class="stat-pill">
+          <div class="value" id="target-score">--</div>
+          <div class="label">Target Score</div>
+        </div>
+        <div class="stat-pill">
+          <div class="value" id="total-sessions">--</div>
+          <div class="label">Total Sessions</div>
+        </div>
+        <div class="stat-pill">
+          <div class="value" id="vocab-count">--</div>
+          <div class="label">Vocabulary</div>
+        </div>
+        <div class="stat-pill">
+          <div class="value" id="synonym-count">--</div>
+          <div class="label">Synonyms</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid grid-2" style="margin-bottom:24px;">
+      <div class="card">
+        <h2>Score Trend</h2>
+        <div class="chart-wrap large">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Skill Radar</h2>
+        <div class="chart-wrap large">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:24px;">
+      <div class="card">
+        <h2>Top Errors</h2>
+        <div class="chart-wrap">
+          <canvas id="errorChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Practice Distribution</h2>
+        <div class="chart-wrap">
+          <canvas id="pieChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:24px;">
+      <div class="card">
+        <h2>Writing History</h2>
+        <div id="writing-table"></div>
+      </div>
+      <div class="card">
+        <h2>Reading History</h2>
+        <div id="reading-table"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-bottom:24px;">
+      <div class="card">
+        <h2>Listening History</h2>
+        <div id="listening-table"></div>
+      </div>
+      <div class="card">
+        <h2>Recent Synonyms</h2>
+        <div class="synonym-list" id="synonym-table"></div>
+      </div>
+      <div class="card">
+        <h2>Vocabulary Due</h2>
+        <div id="vocab-due"></div>
+      </div>
+    </div>
+
+    <footer>
+      Generated by IELTS Claude Skills vPro · Refresh page to update with latest data · <code>~/.ielts/dashboard.html</code>
+    </footer>
+  </div>
+</div>
+
+<script id="ielts-data" type="application/json">
+___IELTS_DATA___
+</script>
+
+<script>
+(function() {
+  var dataEl = document.getElementById('ielts-data');
+  if (!dataEl || !dataEl.textContent.trim() || dataEl.textContent.trim() === '___IELTS_DATA___') {
+    document.getElementById('loading').innerHTML = '<div class="empty-state"><h2>No data yet</h2><p>Run /ielts-writing, /ielts-reading, or /ielts-listening first, then regenerate the dashboard.</p></div>';
+    return;
+  }
+
+  var data;
+  try {
+    data = JSON.parse(dataEl.textContent.trim());
+  } catch(e) {
+    document.getElementById('loading').innerHTML = '<div class="empty-state"><h2>Data parse error</h2><p>' + e.message + '</p></div>';
+    return;
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  var config = data.config || {};
+  var progress = data.progress || {};
+  var errors = data.errors || {};
+  var synonyms = data.synonyms || [];
+  var vocab = data.vocab || [];
+  var writing = data.writing || [];
+  var reading = data.reading || [];
+  var listening = data.listening || [];
+  var speaking = data.speaking || [];
+
+  // Header stats
+  var examDate = config.exam_date;
+  var daysUntil = '--';
+  if (examDate) {
+    var exam = new Date(examDate);
+    var now = new Date();
+    daysUntil = Math.ceil((exam - now) / (1000 * 60 * 60 * 24));
+    daysUntil = Math.max(0, daysUntil);
+  }
+  document.getElementById('countdown').textContent = daysUntil;
+  document.getElementById('target-score').textContent = config.target_score || '--';
+  var totalSessions = (writing.length || 0) + (reading.length || 0) + (listening.length || 0) + (speaking.length || 0);
+  document.getElementById('total-sessions').textContent = totalSessions || '--';
+  document.getElementById('vocab-count').textContent = vocab.length || '--';
+  document.getElementById('synonym-count').textContent = synonyms.length || '--';
+
+  // Colors
+  var skillColors = { writing: '#38bdf8', reading: '#4ade80', listening: '#fbbf24', speaking: '#c084fc' };
+
+  // Trend Chart
+  var trendCtx = document.getElementById('trendChart').getContext('2d');
+  var allDates = [];
+  var datasets = [];
+  ['writing','reading','listening','speaking'].forEach(function(skill) {
+    var scores = (progress[skill + '_scores'] || []);
+    if (scores.length > 0) {
+      datasets.push({
+        label: skill.charAt(0).toUpperCase() + skill.slice(1),
+        data: scores.map(function(s) { return s.score; }),
+        borderColor: skillColors[skill],
+        backgroundColor: skillColors[skill] + '33',
+        tension: 0.3,
+        fill: false,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      });
+      scores.forEach(function(s) {
+        if (allDates.indexOf(s.date) === -1) allDates.push(s.date);
+      });
+    }
+  });
+  allDates.sort();
+  if (allDates.length === 0) allDates = [new Date().toISOString().split('T')[0]];
+
+  var trendData = {
+    labels: allDates,
+    datasets: datasets
+  };
+  new Chart(trendCtx, {
+    type: 'line',
+    data: trendData,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { min: 0, max: 9, ticks: { stepSize: 0.5, callback: function(v) { return v.toFixed(1); } }, grid: { color: '#334155' } },
+        x: { grid: { color: '#334155' } }
+      },
+      plugins: {
+        legend: { labels: { color: '#e2e8f0' } },
+        annotation: config.target_score ? { /* target line could go here */ } : {}
+      }
+    }
+  });
+
+  // Radar Chart
+  var radarCtx = document.getElementById('radarChart').getContext('2d');
+  var latestScores = [];
+  var hasScores = false;
+  ['listening','reading','writing','speaking'].forEach(function(skill) {
+    var scores = progress[skill + '_scores'] || [];
+    var latest = scores.length > 0 ? scores[scores.length - 1].score : null;
+    latestScores.push(latest || 0);
+    if (latest) hasScores = true;
+  });
+  var targetScores = [
+    config.listening || config.target_score || 7,
+    config.reading || config.target_score || 7,
+    config.writing || config.target_score || 7,
+    config.speaking || config.target_score || 7
+  ];
+
+  if (hasScores || config.target_score) {
+    new Chart(radarCtx, {
+      type: 'radar',
+      data: {
+        labels: ['Listening', 'Reading', 'Writing', 'Speaking'],
+        datasets: [
+          {
+            label: 'Current',
+            data: latestScores,
+            borderColor: '#38bdf8',
+            backgroundColor: 'rgba(56,189,248,0.2)',
+            pointBackgroundColor: '#38bdf8'
+          },
+          {
+            label: 'Target',
+            data: targetScores,
+            borderColor: '#f87171',
+            backgroundColor: 'rgba(248,113,113,0.1)',
+            pointBackgroundColor: '#f87171',
+            borderDash: [5, 5]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            min: 0,
+            max: 9,
+            ticks: { stepSize: 1, backdropColor: 'transparent', color: '#94a3b8' },
+            grid: { color: '#334155' },
+            pointLabels: { color: '#e2e8f0' }
+          }
+        },
+        plugins: { legend: { labels: { color: '#e2e8f0' } } }
+      }
+    });
+  }
+
+  // Error Chart (bar)
+  var errorCtx = document.getElementById('errorChart').getContext('2d');
+  var allErrors = [];
+  ['writing','reading','listening','speaking'].forEach(function(cat) {
+    (errors[cat] || []).forEach(function(e) {
+      allErrors.push({ tag: e.tag, count: e.count, category: cat });
+    });
+  });
+  allErrors.sort(function(a, b) { return b.count - a.count; });
+  var topErrors = allErrors.slice(0, 10);
+
+  if (topErrors.length > 0) {
+    new Chart(errorCtx, {
+      type: 'bar',
+      data: {
+        labels: topErrors.map(function(e) { return e.tag; }),
+        datasets: [{
+          label: 'Error Count',
+          data: topErrors.map(function(e) { return e.count; }),
+          backgroundColor: topErrors.map(function(e) { return skillColors[e.category] || '#38bdf8'; }),
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { grid: { color: '#334155' }, ticks: { stepSize: 1 } },
+          y: { grid: { display: false }, ticks: { color: '#e2e8f0' } }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+  } else {
+    document.getElementById('errorChart').parentElement.parentElement.querySelector('h2').insertAdjacentHTML('afterend', '<p class="empty-state">No errors recorded yet</p>');
+    document.getElementById('errorChart').style.display = 'none';
+  }
+
+  // Pie Chart - Practice Distribution
+  var pieCtx = document.getElementById('pieChart').getContext('2d');
+  var distData = [writing.length, reading.length, listening.length, speaking.length];
+  var distTotal = distData.reduce(function(a,b){return a+b;}, 0);
+  if (distTotal > 0) {
+    new Chart(pieCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Writing', 'Reading', 'Listening', 'Speaking'],
+        datasets: [{
+          data: distData,
+          backgroundColor: ['#38bdf8','#4ade80','#fbbf24','#c084fc'],
+          borderColor: '#1e293b',
+          borderWidth: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#e2e8f0' }, position: 'bottom' } }
+      }
+    });
+  } else {
+    document.getElementById('pieChart').parentElement.parentElement.querySelector('h2').insertAdjacentHTML('afterend', '<p class="empty-state">No practice records yet</p>');
+    document.getElementById('pieChart').style.display = 'none';
+  }
+
+  // Writing Table
+  var writingHtml = '';
+  if (writing.length > 0) {
+    writingHtml = '<table><thead><tr><th>Date</th><th>Task</th><th>Score</th><th>TR</th><th>CC</th><th>LR</th><th>GRA</th></tr></thead><tbody>';
+    writing.slice().reverse().slice(0, 10).forEach(function(e) {
+      var s = e.scores || {};
+      writingHtml += '<tr><td>' + e.date + '</td><td>' + e.task_type + '</td><td><strong>' + e.total + '</strong></td><td>' + (s.TR||'-') + '</td><td>' + (s.CC||'-') + '</td><td>' + (s.LR||'-') + '</td><td>' + (s.GRA||'-') + '</td></tr>';
+    });
+    writingHtml += '</tbody></table>';
+  } else {
+    writingHtml = '<div class="empty-state"><p>No essays yet — try /ielts-writing</p></div>';
+  }
+  document.getElementById('writing-table').innerHTML = writingHtml;
+
+  // Reading Table
+  var readingHtml = '';
+  if (reading.length > 0) {
+    readingHtml = '<table><thead><tr><th>Date</th><th>Passage</th><th>Score</th><th>Correct</th></tr></thead><tbody>';
+    reading.slice().reverse().slice(0, 10).forEach(function(e) {
+      readingHtml += '<tr><td>' + e.date + '</td><td>' + e.passage_title + '</td><td><strong>' + e.score + '</strong></td><td>' + e.correct + '/' + e.total_questions + '</td></tr>';
+    });
+    readingHtml += '</tbody></table>';
+  } else {
+    readingHtml = '<div class="empty-state"><p>No reading records yet — try /ielts-reading</p></div>';
+  }
+  document.getElementById('reading-table').innerHTML = readingHtml;
+
+  // Listening Table
+  var listeningHtml = '';
+  if (listening.length > 0) {
+    listeningHtml = '<table><thead><tr><th>Date</th><th>Test</th><th>Score</th><th>Correct</th></tr></thead><tbody>';
+    listening.slice().reverse().slice(0, 10).forEach(function(e) {
+      listeningHtml += '<tr><td>' + e.date + '</td><td>' + e.test_name + '</td><td><strong>' + e.score + '</strong></td><td>' + e.correct + '/' + e.total_questions + '</td></tr>';
+    });
+    listeningHtml += '</tbody></table>';
+  } else {
+    listeningHtml = '<div class="empty-state"><p>No listening records yet — try /ielts-listening</p></div>';
+  }
+  document.getElementById('listening-table').innerHTML = listeningHtml;
+
+  // Synonyms
+  var synHtml = '';
+  if (synonyms.length > 0) {
+    synHtml = '<table><thead><tr><th>Word</th><th>Synonym</th><th>Source</th></tr></thead><tbody>';
+    synonyms.slice().reverse().slice(0, 20).forEach(function(s) {
+      synHtml += '<tr><td>' + s.word + '</td><td><strong>' + s.synonym + '</strong></td><td>' + (s.source||'') + '</td></tr>';
+    });
+    synHtml += '</tbody></table>';
+  } else {
+    synHtml = '<div class="empty-state"><p>No synonyms yet — they auto-add from reading/writing</p></div>';
+  }
+  document.getElementById('synonym-table').innerHTML = synHtml;
+
+  // Vocab Due
+  var nowStr = new Date().toISOString().split('T')[0];
+  var dueWords = vocab.filter(function(v) { return v.next_review && v.next_review <= nowStr; });
+  var vocabHtml = '';
+  if (dueWords.length > 0) {
+    vocabHtml = '<p style="margin-bottom:12px;color:#fbbf24;">' + dueWords.length + ' words due for review</p>';
+    vocabHtml += '<table><thead><tr><th>Word</th><th>Definition</th><th>Due</th></tr></thead><tbody>';
+    dueWords.slice(0, 15).forEach(function(v) {
+      vocabHtml += '<tr><td><strong>' + v.word + '</strong></td><td>' + v.definition + '</td><td>' + v.next_review + '</td></tr>';
+    });
+    vocabHtml += '</tbody></table>';
+  } else if (vocab.length > 0) {
+    vocabHtml = '<div class="empty-state"><p>All ' + vocab.length + ' words reviewed! No words due.</p></div>';
+  } else {
+    vocabHtml = '<div class="empty-state"><p>No vocabulary yet — try /ielts-vocab</p></div>';
+  }
+  document.getElementById('vocab-due').innerHTML = vocabHtml;
+
+})();
+</script>
+</body>
+</html>
