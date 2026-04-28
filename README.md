@@ -22,6 +22,7 @@
 
 **vPro 新特性：**
 - 数据持久化到 `~/.ielts/`——跨会话记忆
+- **教练记忆系统：** 自动记录你的学习偏好、弱项模式、策略反馈，下次对话无缝衔接
 - 每篇作文自动归档，带评分历史
 - 错题本自动聚合高频错误标签
 - 同义替换库跨篇累计，可搜索
@@ -182,6 +183,7 @@ ielts-claude-skills/
 ├── synonyms.json        # 同义替换库
 ├── progress.json        # 分数趋势
 ├── vocab.json           # 词汇 + 间隔重复数据
+├── memories.json        # 教练记忆（偏好/弱项/策略）
 └── dashboard.html       # 生成的 Dashboard
 ```
 
