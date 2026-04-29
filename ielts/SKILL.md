@@ -39,7 +39,6 @@ metadata:
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py init
-
 ```
 
 这条命令是幂等的——目录不存在就创建，配置文件不存在就生成默认值。
@@ -49,7 +48,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py init
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py config get
 python3 ~/.claude/skills/shared/ielts_cli.py progress show
-
 ```
 
 根据返回数据判断：
@@ -79,14 +77,12 @@ python3 ~/.claude/skills/shared/ielts_cli.py progress show
 ⚠️ 高频错误：{error_summary 中的 top 3}
 
 今天想做什么？
-
 ```
 
 ### 第三步：读取教练记忆
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py memory list --last 15
-
 ```
 
 这些是过往会话中保存的个性化教练观察。从中提取：
@@ -115,7 +111,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py config set \
   --reading {level} \
   --writing {level} \
   --speaking {level}
-
 ```
 
 **4.2 保存教练记忆**
@@ -128,7 +123,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|preference|weakness|strength|strategy|note> \
   --skill <general|writing|reading|listening|speaking|vocab> \
   --priority <high|medium|low>
-
 ```
 
 **值得保存：** 用户偏好声明、发现的弱项模式（行为原因非分数）、已给出的策略建议、用户反馈过效果的方法、待跟进的承诺。
@@ -268,14 +262,12 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py backup
-
 ```
 
 这会生成 `~/ielts-backup-YYYY-MM-DD.zip`。换电脑时用：
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py restore --file ~/ielts-backup-YYYY-MM-DD.zip
-
 ```
 
 ---

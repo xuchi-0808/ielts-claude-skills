@@ -37,25 +37,22 @@ metadata:
 
 1. 确保数据目录存在：
 
-```bash
-python3 ~/.claude/skills/shared/ielts_cli.py init
-
-```
+   ```bash
+   python3 ~/.claude/skills/shared/ielts_cli.py init
+   ```
 
 2. 读取用户配置和历史：
 
-```bash
-python3 ~/.claude/skills/shared/ielts_cli.py config get
-python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 5
-
-```
+   ```bash
+   python3 ~/.claude/skills/shared/ielts_cli.py config get
+   python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 5
+   ```
 
 如果有历史记录，在批改前告诉用户：
 
 ```text
 📊 你之前写过 {n} 篇作文，最近一篇得分 {x}。
 目标：{target}，当前：{current}，差距：{gap} 分。
-
 ```
 
 ### 每次批改完成后
@@ -70,14 +67,12 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing add \
   --scores '{"TR":{x},"CC":{y},"LR":{z},"GRA":{w}}' \
   --key-issues '["问题1","问题2"]' \
   --content "{作文全文，单行，引号转义}"
-
 ```
 
 如果需要单独记录错误标签：
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py error add --category writing --tag "{标签}"
-
 ```
 
 ---
@@ -237,7 +232,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py error add --category writing --tag 
 逐段检查，标注每个具体问题：
 
 ```markdown
-
 ### 第X段逐句分析
 
 > 原文："Many people think that technology has a bad effect on society."
@@ -251,7 +245,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py error add --category writing --tag 
 - **CC**: 论证太薄
 
 - **LR**: "don't walk anymore" 过于口语化
-
 ```
 
 ### Phase 4：改写对比
@@ -271,7 +264,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py error add --category writing --tag 
 ### Phase 5：输出批改报告
 
 ```markdown
-
 # 写作批改报告
 
 ## 基本信息
@@ -314,7 +306,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py error add --category writing --tag 
 ## 下一步
 
 - 修改后再来一次 `/ielts-writing`
-
 ```
 
 ### Phase 6：保存数据
@@ -331,13 +322,13 @@ python3 ~/.claude/skills/shared/ielts_cli.py error add --category writing --tag 
 
 2. 从以下高频话题中出题：
 
-**Task 2 高频话题：**
+   **Task 2 高频话题：**
 
-- Education / Technology / Environment / Health / Society / Work
+   - Education / Technology / Environment / Health / Society / Work
 
-**Task 1 类型：**
+   **Task 1 类型：**
 
-- 柱状图 / 折线图 / 饼图 / 表格 / 地图 / 流程图
+   - 柱状图 / 折线图 / 饼图 / 表格 / 地图 / 流程图
 
 3. 出题后等用户写完，进入批改模式。
 
@@ -363,7 +354,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|weakness|strength|strategy> \
   --skill writing \
   --priority <high|medium|low>
-
 ```
 
 **值得保存：** 具体弱项模式（如"图表总漏 overview""观点展开不充分"）、已给策略（如"先写 Task 2"）、用户反馈（如"范文对比比评分更有用"）、常见错误根因。

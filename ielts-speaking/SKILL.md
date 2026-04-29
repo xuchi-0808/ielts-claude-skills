@@ -39,19 +39,17 @@ metadata:
 
 1. 初始化并读取历史：
 
-```bash
-python3 ~/.claude/skills/shared/ielts_cli.py init
-python3 ~/.claude/skills/shared/ielts_cli.py config get
-python3 ~/.claude/skills/shared/ielts_cli.py speaking list
-
-```
+   ```bash
+   python3 ~/.claude/skills/shared/ielts_cli.py init
+   python3 ~/.claude/skills/shared/ielts_cli.py config get
+   python3 ~/.claude/skills/shared/ielts_cli.py speaking list
+   ```
 
 2. 查看已覆盖的话题组：
 
-```bash
-python3 ~/.claude/skills/shared/ielts_cli.py progress show
-
-```
+   ```bash
+   python3 ~/.claude/skills/shared/ielts_cli.py progress show
+   ```
 
 ### 每次素材生成后
 
@@ -63,7 +61,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py speaking add \
   --part "{Part 1/2/3}" \
   --group "{归属组}" \
   --notes "{关键表达或备注}"
-
 ```
 
 ---
@@ -122,7 +119,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py speaking add \
 ### Step 2：覆盖映射
 
 ```markdown
-
 ## 覆盖映射表
 
 | 话题 | 归属组 | 万能故事 | 需要调整的点 |
@@ -132,7 +128,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py speaking add \
 
 **覆盖率：{x}/50 = {x}%**
 **未覆盖话题：** {列出 + 建议额外准备}
-
 ```
 
 ### Step 3：保存
@@ -146,7 +141,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py speaking add \
 ### Step 1：生成 Part 2 回答（200-250 词，2 分钟）
 
 ```markdown
-
 ## Part 2: {话题}
 
 **话题卡：**
@@ -176,7 +170,6 @@ And explain {解释要求}
 
 | 表达 | 功能 | 可替换为 |
 |------|------|--------|
-
 ```
 
 **回答生成原则：**
@@ -194,7 +187,6 @@ And explain {解释要求}
 ### Step 2：Part 3 追问预测（4-6 个）
 
 ```markdown
-
 ## Part 3 追问预测
 
 ### Q1: {预测问题}
@@ -211,7 +203,6 @@ And explain {解释要求}
 
 **参考回答：**
 "{2-3 句}"
-
 ```
 
 ### Step 3：关联词汇
@@ -220,7 +211,6 @@ And explain {解释要求}
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py synonym search --word "{话题关键词}"
-
 ```
 
 ---
@@ -311,7 +301,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|weakness|strength|strategy> \
   --skill speaking \
   --priority <high|medium|low>
-
 ```
 
 **值得保存：** 话题覆盖盲区、表达卡顿原因、已编万能故事的使用情况、用户偏好的话题类型。

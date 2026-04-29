@@ -21,21 +21,18 @@ metadata:
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py init
-
 ```
 
 ### Step 2：生成 Dashboard
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py dashboard
-
 ```
 
 ### Step 3：打开浏览器
 
 ```bash
 open ~/.ielts/dashboard.html
-
 ```
 
 ### Step 4：告诉用户
@@ -61,7 +58,6 @@ open ~/.ielts/dashboard.html
 刷新：在浏览器中刷新即可看到最新数据。
 
 💾 提示：运行 `python3 ~/.claude/skills/shared/ielts_cli.py backup` 备份全部数据。
-
 ```
 
 ---
@@ -74,7 +70,6 @@ open ~/.ielts/dashboard.html
 
 ```bash
 open ~/.ielts/dashboard.html
-
 ```
 
 ### 如果没有数据
@@ -91,7 +86,6 @@ Dashboard 里还没数据。先去做一次练习：
 - 分析一套听力 → /ielts-listening
 
 有了数据后，再回来 `/ielts-dashboard`。
-
 ```
 
 ---

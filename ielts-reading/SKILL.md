@@ -37,24 +37,21 @@ metadata:
 
 1. 确保数据目录存在：
 
-```bash
-python3 ~/.claude/skills/shared/ielts_cli.py init
-
-```
+   ```bash
+   python3 ~/.claude/skills/shared/ielts_cli.py init
+   ```
 
 2. 读取同义替换库，用于交叉引用：
 
-```bash
-python3 ~/.claude/skills/shared/ielts_cli.py synonym list
-
-```
+   ```bash
+   python3 ~/.claude/skills/shared/ielts_cli.py synonym list
+   ```
 
 3. 读取用户的错误历史，看是否有重复犯的错误类型：
 
-```bash
-python3 ~/.claude/skills/shared/ielts_cli.py error list --category reading
-
-```
+   ```bash
+   python3 ~/.claude/skills/shared/ielts_cli.py error list --category reading
+   ```
 
 ### 每次分析完成后
 
@@ -69,7 +66,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py reading add \
   --question-types '{"T/F/NG":{"total":5,"correct":3},"Matching":{"total":4,"correct":2}}' \
   --synonyms-added {本次新增同义替换对数} \
   --key-errors '["FALSE vs NOT GIVEN混淆","定位错误"]'
-
 ```
 
 对于每一对同义替换，逐对入库：
@@ -80,7 +76,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
   --synonym "{原文用词}" \
   --source "reading" \
   --context "{Cambridge X Test Y}"
-
 ```
 
 ---
@@ -123,7 +118,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 每道错题：
 
 ```markdown
-
 ### Q{n}: {题目简述}
 
 **用户答案：** {x}
@@ -145,7 +139,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 
 **正确推导：**
 {从原文到正确答案的完整推导过程}
-
 ```
 
 ### Phase 3：T/F/NG 专项逻辑（重点）
@@ -171,7 +164,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 - NOT GIVEN = 原文**没有提供足够信息**
 
 - 不能用"逻辑推断"——只能用原文**明确说了**的内容
-
 ```
 
 **常见陷阱：**
@@ -189,7 +181,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 做完所有题目后，生成完整的同义替换词表：
 
 ```markdown
-
 ## 同义替换词表
 
 | 题目用词 | 原文用词 | 出处 |
@@ -197,20 +188,17 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 | significant | substantial | Q3 |
 | decline | deteriorate | Q5 |
 | gather | accumulate | Q8 |
-
 ```
 
 **如果同义替换库中已有相关词汇，特别标注：**
 
 ```markdown
 📚 这个词在库中已有 {n} 个同义替换：{list}
-
 ```
 
 ### Phase 5：输出分析报告
 
 ```markdown
-
 # 阅读分析报告
 
 ## 总览
@@ -255,7 +243,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 ## 下一步
 
 - 同类题型再做一篇 → 重点看 {具体题型}
-
 ```
 
 ### Phase 6：保存数据
@@ -295,7 +282,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 ## Matching Headings 专项
 
 ```markdown
-
 ### 段落 {X} 标题匹配
 
 **段落核心：** {一句话概括}
@@ -308,7 +294,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py synonym add \
 
 **干扰标题：** {y} — {标题内容}
 **排除原因：** 这个标题描述的是 {细节/另一段的内容}
-
 ```
 
 **通用策略：**
@@ -347,7 +332,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|weakness|strength|strategy> \
   --skill reading \
   --priority <high|medium|low>
-
 ```
 
 **值得保存：** 特定题型错误模式（如"T/F/NG 总搞混""Heading 耗时过长"）、阅读习惯问题（如"逐字读不扫读"）、已给策略、用户反馈。

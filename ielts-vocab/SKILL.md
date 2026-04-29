@@ -37,13 +37,11 @@ metadata:
 python3 ~/.claude/skills/shared/ielts_cli.py init
 python3 ~/.claude/skills/shared/ielts_cli.py vocab review
 python3 ~/.claude/skills/shared/ielts_cli.py synonym list
-
 ```
 
 ### 词汇操作
 
 ```bash
-
 # 添加新词
 
 python3 ~/.claude/skills/shared/ielts_cli.py vocab add \
@@ -66,7 +64,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab list --due
 # 查看全部词汇
 
 python3 ~/.claude/skills/shared/ielts_cli.py vocab list --sort-by next_review
-
 ```
 
 ---
@@ -114,7 +111,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab list --sort-by next_review
 ### 复习流程
 
 ```markdown
-
 ## 📝 今日词汇复习
 
 ⏰ {n} 个词到期，开始复习——
@@ -140,13 +136,11 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab list --sort-by next_review
 
 用户自评后，自动调用：
 python3 ~/.claude/skills/shared/ielts_cli.py vocab update --word "{word}" --quality {q}
-
 ```
 
 ### 复习完成总结
 
 ```markdown
-
 ## ✅ 复习完成
 
 **本次复习：** {n} 词
@@ -162,7 +156,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab update --word "{word}" --qual
 
 📊 词汇库：{total} 词
 📚 同义替换库：{synonym_count} 对
-
 ```
 
 ---
@@ -216,7 +209,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab update --word "{word}" --qual
 - {word} vs {confusable}（{区别}）
 
 已自动关联到同义替换库 ✅
-
 ```
 
 完成后执行 CLI 命令保存。
@@ -234,7 +226,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab update --word "{word}" --qual
 你说：significant
 我有哪些同义替换？
 → substantial, considerable, notable, remarkable...
-
 ```
 
 **类型 B：配对练习**
@@ -248,7 +239,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab update --word "{word}" --qual
 改写：There was a {dramatic} {rise} in the number of tourists.
       → dramatic = significant/substantial
       → rise = increase/growth
-
 ```
 
 ### 每次训练后
@@ -275,7 +265,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab update --word "{word}" --qual
 ### 词汇包格式
 
 ```markdown
-
 ## 📦 {话题}词汇包
 
 ### 核心名词（10 个）
@@ -298,7 +287,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py vocab update --word "{word}" --qual
 ### 同义替换链接
 
 自动从同义替换库中拉取相关词对
-
 ```
 
 ---
@@ -312,7 +300,6 @@ accommodation, advertisement, September, February, Wednesday,
 government, environment, restaurant, certificate, department,
 laboratory, necessary, marriage, opportunity, responsibility,
 questionnaire, library, immediately, successfully, disappointed
-
 ```
 
 ### 写作高频替换词
@@ -326,7 +313,6 @@ think → believe, argue, contend, maintain, assert
 many → numerous, a multitude of, a host of, several
 good → beneficial, advantageous, favorable, positive
 bad → detrimental, adverse, harmful, negative
-
 ```
 
 ---
@@ -341,7 +327,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|preference|weakness> \
   --skill vocab \
   --priority <high|medium|low>
-
 ```
 
 **值得保存：** 用户偏好的词汇学习方式（如"场景词汇比单词表有效"）、高频出错的词汇类型（如"学术动词搭配不熟"）、复习节奏偏好。

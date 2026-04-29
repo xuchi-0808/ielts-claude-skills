@@ -61,7 +61,6 @@
 ### 安装步骤
 
 ```bash
-
 # 1. 进入项目目录
 
 cd ielts-claude-skills
@@ -78,7 +77,6 @@ cp -r ielts ielts-writing ielts-reading ielts-speaking \
 python3 ~/.claude/skills/shared/ielts_cli.py init
 
 # 4. 重启 Claude Code
-
 ```
 
 装完之后重启 Claude Code，输入 `/ielts` 就能用。
@@ -94,7 +92,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py init
 AI：（问你 3 个问题：目标分、考试日期、今天想练啥）
    → 路由到对应的子 skill
    → 自动保存你的配置
-
 ```
 
 ### 场景 2：直接批改作文
@@ -113,7 +110,6 @@ AI：
 - 给提分优先级
 
 - 自动保存到 ~/.ielts/writing/
-
 ```
 
 ### 场景 3：分析阅读错题
@@ -128,7 +124,6 @@ AI：
 - 提取同义替换词表 → 自动入库
 
 - T/F/NG 逻辑分析
-
 ```
 
 ### 场景 4：听力错题分析
@@ -143,7 +138,6 @@ AI：
 - 错因分类（拼写/数字/没听到/干扰项）
 
 - 精听任务生成
-
 ```
 
 ### 场景 5：词汇复习
@@ -157,7 +151,6 @@ AI：
 - 同义替换专项训练
 
 - 按话题推送词汇包
-
 ```
 
 ### 场景 6：查看学习数据
@@ -171,7 +164,6 @@ AI：
 - 自动在浏览器打开
 
 - 写作趋势图 / 四科雷达图 / 错题分布
-
 ```
 
 ### 场景 7：诊断 + 备考计划
@@ -185,7 +177,6 @@ AI：
 - 生成诊断报告
 
 - 制定每日/每周训练计划
-
 ```
 
 ---
@@ -218,7 +209,6 @@ ielts-claude-skills/
 
 ├── README.md
 └── LICENSE                     # MIT
-
 ```
 
 ---
@@ -250,7 +240,6 @@ ielts-claude-skills/
 ├── memories.json        # 教练记忆（偏好/弱项/策略）
 
 └── dashboard.html       # 生成的 Dashboard
-
 ```
 
 **纯本地，无云端。** 用 `python3 ~/.claude/skills/shared/ielts_cli.py backup` 备份。

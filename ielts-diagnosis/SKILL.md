@@ -41,7 +41,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py error list
 python3 ~/.claude/skills/shared/ielts_cli.py synonym list
 python3 ~/.claude/skills/shared/ielts_cli.py vocab list
 python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
-
 ```
 
 ---
@@ -49,7 +48,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 ## 诊断报告模板
 
 ```markdown
-
 # 📊 IELTS 诊断报告
 
 **生成日期：** {date}
@@ -186,7 +184,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 2. 每次练完回来用对应 skill 记录数据
 
 3. {days_before_next_diagnosis} 天后再跑一次诊断：`/ielts-diagnosis`
-
 ```
 
 ---
@@ -205,7 +202,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 cat > ~/.ielts/diagnosis-$(date +%Y-%m-%d).md << 'DIAGEOF'
 {报告全文}
 DIAGEOF
-
 ```
 
 ---
@@ -220,7 +216,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|weakness|strength|strategy> \
   --skill general \
   --priority high
-
 ```
 
 **值得保存：** 全局诊断结论（如"最大短板是写作"）、备考策略建议、科优先级排序。

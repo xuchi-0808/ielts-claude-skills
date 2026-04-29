@@ -37,7 +37,6 @@ metadata:
 python3 ~/.claude/skills/shared/ielts_cli.py init
 python3 ~/.claude/skills/shared/ielts_cli.py config get
 python3 ~/.claude/skills/shared/ielts_cli.py error list --category listening
-
 ```
 
 ### 每次分析后
@@ -51,7 +50,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
   --section-scores '{"Section1":{"total":10,"correct":8},"Section2":...}' \
   --question-type-errors '{"Form Completion":2,"Multiple Choice":3}' \
   --key-errors '["拼写错误","数字听错","干扰项被误导"]'
-
 ```
 
 ---
@@ -75,7 +73,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 ### Phase 1：Section 得分总览
 
 ```markdown
-
 ## Section 得分
 
 | Section | 场景 | 正确 | 总分 | 正确率 |
@@ -87,7 +84,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 
 **总计：** {x}/40 → ≈ Band {score}
 **最弱 Section：** {section}
-
 ```
 
 ### Phase 2：错因分类
@@ -107,7 +103,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 ### Phase 3：逐题拆解
 
 ```markdown
-
 ### Q{n}: {题目}
 
 **用户答案：** {x}
@@ -122,13 +117,11 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 
 **同类词/数字练习：**
 列出 2-3 个容易混淆的同类例子
-
 ```
 
 ### Phase 4：题型统计
 
 ```markdown
-
 ## 题型错误分布
 
 | 题型 | 错误数 | 高频错因 |
@@ -138,7 +131,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 | Map/Plan Labelling | {x} | 方位词 / 跟丢 |
 | Sentence Completion | {x} | 同义替换 |
 | Matching | {x} | 跟丢 / 干扰 |
-
 ```
 
 ---
@@ -158,7 +150,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 ### 精听任务输出
 
 ```markdown
-
 ## 精听任务
 
 **目标 Section：** S{n}
@@ -180,7 +171,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py listening add \
 - {连读 / 弱读 / 吞音} 例子：{原文例子}
 
 ⏱️ 预计时间：{x} 分钟
-
 ```
 
 ---
@@ -280,7 +270,6 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|weakness|strength|strategy> \
   --skill listening \
   --priority <high|medium|low>
-
 ```
 
 **值得保存：** Section 特定弱项（如"S4 学术讲座跟不上""地图题方位词反应慢"）、错因模式（如"拼写错误""单复数漏听"）、精听方法的效果反馈。
