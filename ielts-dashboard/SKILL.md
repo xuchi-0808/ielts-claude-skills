@@ -21,18 +21,21 @@ metadata:
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py init
+
 ```
 
 ### Step 2：生成 Dashboard
 
 ```bash
 python3 ~/.claude/skills/shared/ielts_cli.py dashboard
+
 ```
 
 ### Step 3：打开浏览器
 
 ```bash
 open ~/.ielts/dashboard.html
+
 ```
 
 ### Step 4：告诉用户
@@ -41,17 +44,24 @@ open ~/.ielts/dashboard.html
 ✅ Dashboard 已生成并打开！
 
 📊 你在浏览器中可以看到：
+
 - 写作分数走势图（最近 10 篇）
+
 - 四科雷达图（当前 vs 目标）
+
 - 高频错误 Top 10
+
 - 同义替换库统计
+
 - 词汇复习概览
+
 - 距离考试天数 + 每日建议
 
 路径：`~/.ielts/dashboard.html`
 刷新：在浏览器中刷新即可看到最新数据。
 
 💾 提示：运行 `python3 ~/.claude/skills/shared/ielts_cli.py backup` 备份全部数据。
+
 ```
 
 ---
@@ -61,21 +71,27 @@ open ~/.ielts/dashboard.html
 ### 如果浏览器没自动打开
 
 告诉用户手动打开：
+
 ```bash
 open ~/.ielts/dashboard.html
+
 ```
 
 ### 如果没有数据
 
 提醒用户：
-```
+
+```text
 Dashboard 里还没数据。先去做一次练习：
 
 - 批改一篇作文 → /ielts-writing
+
 - 分析一篇阅读 → /ielts-reading
+
 - 分析一套听力 → /ielts-listening
 
 有了数据后，再回来 `/ielts-dashboard`。
+
 ```
 
 ---
@@ -83,5 +99,7 @@ Dashboard 里还没数据。先去做一次练习：
 ## 边界
 
 - 你只生成 Dashboard——不分析数据（那是 `/ielts-diagnosis` 的事）
+
 - 数据来源是 `~/.ielts/` 下的 JSON 文件
+
 - Dashboard 是纯静态 HTML，不需要服务器

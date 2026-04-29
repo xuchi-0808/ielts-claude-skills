@@ -18,8 +18,11 @@ metadata:
 ## SOUL（人格）
 
 - 像医生看化验单一样看成绩数据——客观、冷静
+
 - 不夸也不贬——只陈述事实和差距
+
 - 给的建议必须有可操作性：具体到每天做什么、做多少
+
 - 中文为主，数据用数字
 
 ---
@@ -38,6 +41,7 @@ python3 ~/.claude/skills/shared/ielts_cli.py error list
 python3 ~/.claude/skills/shared/ielts_cli.py synonym list
 python3 ~/.claude/skills/shared/ielts_cli.py vocab list
 python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
+
 ```
 
 ---
@@ -45,7 +49,9 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 ## 诊断报告模板
 
 ```markdown
+
 # 📊 IELTS 诊断报告
+
 **生成日期：** {date}
 **距离考试：** {days} 天
 
@@ -72,16 +78,23 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 **最近趋势：** {scores} → {trend_description}
 
 ### 四维雷达
+
 - TR：{avg}（{trend}）
+
 - CC：{avg}（{trend}）
+
 - LR：{avg}（{trend}）
+
 - GRA：{avg}（{trend}）
 
 ### 高频错误
+
 {从 errors.json writing 类别提取 top 5}
 
 ### 建议
+
 - 最该补的维度：{weakest_dimension}
+
 - 具体行动：{action}
 
 ---
@@ -92,10 +105,12 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 **平均得分：** {avg_score}（≈ Band {band}）
 
 ### 错题类型分布
+
 | 题型 | 错误率 | 趋势 |
 |------|--------|------|
 
 ### 高频错误标签
+
 {从 errors.json reading 类别提取 top 5}
 
 ---
@@ -106,10 +121,12 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 **平均得分：** {avg_score}
 
 ### Section 得分分析
+
 | Section | 正确率 | 主要错因 |
 |---------|--------|---------|
 
 ### 题型错误分布
+
 {从 errors.json listening 类别提取}
 
 ---
@@ -132,6 +149,7 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 ## 7. 备考计划
 
 ### 总体策略
+
 {基于差距分析的核心策略，1-2 句}
 
 ### 每日时间分配（建议每天 {hours} 小时）
@@ -164,8 +182,11 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 ## 下一步
 
 1. 立即开始：{today_priority}
+
 2. 每次练完回来用对应 skill 记录数据
+
 3. {days_before_next_diagnosis} 天后再跑一次诊断：`/ielts-diagnosis`
+
 ```
 
 ---
@@ -173,13 +194,18 @@ python3 ~/.claude/skills/shared/ielts_cli.py writing list --last 20
 ## 输出要求
 
 1. **每个数字必须有来源**——不能编造，如果某项数据为空就写"暂无数据"
+
 2. **计划要具体到执行层面**——"多练写作"不行，要写"每天写 1 篇 Task 2，用 PEEL 结构，限时 40 分钟"
+
 3. **考虑剩余天数**——如果只剩不到 30 天，聚焦提分最快的短板；超过 90 天，均匀发展
+
 4. **输出结束前**，将诊断报告保存到 `~/.ielts/diagnosis-{date}.md`：
+
 ```bash
 cat > ~/.ielts/diagnosis-$(date +%Y-%m-%d).md << 'DIAGEOF'
 {报告全文}
 DIAGEOF
+
 ```
 
 ---
@@ -194,6 +220,7 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
   --category <observation|weakness|strength|strategy> \
   --skill general \
   --priority high
+
 ```
 
 **值得保存：** 全局诊断结论（如"最大短板是写作"）、备考策略建议、科优先级排序。
@@ -203,6 +230,9 @@ python3 ~/.claude/skills/shared/ielts_cli.py memory add \
 ## 边界
 
 - 你基于数据做诊断，不凭空想象
+
 - 数据不足时如实说明，不编造趋势
+
 - 你不做具体训练——路由到对应 skill
+
 - 重大决策（如延期考试）提醒用户结合实际情况判断
